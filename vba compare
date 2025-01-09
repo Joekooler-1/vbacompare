@@ -17,16 +17,24 @@ Sub CompareColumns()
     For i = 1 To lastRow
         diffFound = False
         
-        ' Check if B and F are different
-        If ws.Cells(i, "B").Value <> ws.Cells(i, "F").Value Then
+        ' Check if B or F is blank, N/A, or error
+        If IsEmpty(ws.Cells(i, "B")) Or IsError(ws.Cells(i, "B")) Or ws.Cells(i, "B").Value = "" Then
+            ws.Cells(i, "H").Value = "No Value in B"
+        ElseIf IsEmpty(ws.Cells(i, "F")) Or IsError(ws.Cells(i, "F")) Or ws.Cells(i, "F").Value = "" Then
+            ws.Cells(i, "H").Value = "No Value in F"
+        ElseIf ws.Cells(i, "B").Value <> ws.Cells(i, "F").Value Then
             ws.Cells(i, "H").Value = "Mismatch: " & ws.Cells(i, "B").Value & " <> " & ws.Cells(i, "F").Value
             diffFound = True
         Else
             ws.Cells(i, "H").Value = "Match"
         End If
         
-        ' Check if C and G are different
-        If ws.Cells(i, "C").Value <> ws.Cells(i, "G").Value Then
+        ' Check if C or G is blank, N/A, or error
+        If IsEmpty(ws.Cells(i, "C")) Or IsError(ws.Cells(i, "C")) Or ws.Cells(i, "C").Value = "" Then
+            ws.Cells(i, "J").Value = "No Value in C"
+        ElseIf IsEmpty(ws.Cells(i, "G")) Or IsError(ws.Cells(i, "G")) Or ws.Cells(i, "G").Value = "" Then
+            ws.Cells(i, "J").Value = "No Value in G"
+        ElseIf ws.Cells(i, "C").Value <> ws.Cells(i, "G").Value Then
             ws.Cells(i, "J").Value = "Mismatch: " & ws.Cells(i, "C").Value & " <> " & ws.Cells(i, "G").Value
             diffFound = True
         Else
