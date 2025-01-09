@@ -4,6 +4,7 @@ Sub UpdateColumnCBasedOnComparison()
     Dim lastRowB As Long, lastRowAM As Long, logRow As Long
     Dim i As Long, j As Long
     Dim lookupValue As String
+    Dim oldValue As String
     Dim foundMatch As Boolean
     Dim changeCount As Long
     Dim popUpLog As String
@@ -29,7 +30,8 @@ Sub UpdateColumnCBasedOnComparison()
     ' Set up the Change Log headers
     logSheet.Cells(1, 1).Value = "Row"
     logSheet.Cells(1, 2).Value = "B Value"
-    logSheet.Cells(1, 3).Value = "New C Value"
+    logSheet.Cells(1, 3).Value = "Old C Value"
+    logSheet.Cells(1, 4).Value = "New C Value"
     logRow = 2 ' Start logging at row 2
     
     ' Initialize counters
@@ -39,6 +41,7 @@ Sub UpdateColumnCBasedOnComparison()
     ' Loop through each value in column B
     For i = 2 To lastRowB ' Assuming headers in row 1
         lookupValue = ws.Cells(i, "B").Value
+        oldValue = ws.Cells(i, "C").Value
         foundMatch = False
         
         ' Loop through column AM to find a match
@@ -51,13 +54,14 @@ Sub UpdateColumnCBasedOnComparison()
                 ' Log the change
                 logSheet.Cells(logRow, 1).Value = i
                 logSheet.Cells(logRow, 2).Value = lookupValue
-                logSheet.Cells(logRow, 3).Value = ws.Cells(j, "AN").Value
+                logSheet.Cells(logRow, 3).Value = oldValue
+                logSheet.Cells(logRow, 4).Value = ws.Cells(j, "AN").Value
                 logRow = logRow + 1
                 changeCount = changeCount + 1
                 
                 ' Add to pop-up summary if under 10 changes
                 If changeCount <= 10 Then
-                    popUpLog = popUpLog & "Row " & i & ": " & lookupValue & " -> " & ws.Cells(j, "AN").Value & vbNewLine
+                    popUpLog = popUpLog & "Row " & i & ": " & lookupValue & " (Old: " & oldValue & ") -> " & ws.Cells(j, "AN").Value & vbNewLine
                 End If
                 Exit For
             End If
