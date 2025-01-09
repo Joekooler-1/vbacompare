@@ -1,0 +1,45 @@
+Sub CompareColumns()
+    Dim ws As Worksheet
+    Dim lastRow As Long
+    Dim i As Long
+    Dim diffFound As Boolean
+    
+    ' Set the worksheet
+    Set ws = ThisWorkbook.Sheets(1) ' Change to the relevant sheet if needed
+    
+    ' Find the last row with data in columns B and F
+    lastRow = ws.Cells(ws.Rows.Count, "B").End(xlUp).Row
+    If ws.Cells(ws.Rows.Count, "F").End(xlUp).Row > lastRow Then
+        lastRow = ws.Cells(ws.Rows.Count, "F").End(xlUp).Row
+    End If
+    
+    ' Loop through rows and compare
+    For i = 1 To lastRow
+        diffFound = False
+        
+        ' Check if B and F are different
+        If ws.Cells(i, "B").Value <> ws.Cells(i, "F").Value Then
+            ws.Cells(i, "H").Value = "Mismatch: " & ws.Cells(i, "B").Value & " <> " & ws.Cells(i, "F").Value
+            diffFound = True
+        Else
+            ws.Cells(i, "H").Value = "Match"
+        End If
+        
+        ' Check if C and G are different
+        If ws.Cells(i, "C").Value <> ws.Cells(i, "G").Value Then
+            ws.Cells(i, "J").Value = "Mismatch: " & ws.Cells(i, "C").Value & " <> " & ws.Cells(i, "G").Value
+            diffFound = True
+        Else
+            ws.Cells(i, "J").Value = "Match"
+        End If
+        
+        ' Optional: Highlight mismatched rows
+        If diffFound Then
+            ws.Rows(i).Interior.Color = RGB(255, 200, 200) ' Light red for mismatches
+        Else
+            ws.Rows(i).Interior.Color = xlNone
+        End If
+    Next i
+    
+    MsgBox "Comparison completed!", vbInformation
+End Sub
