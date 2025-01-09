@@ -1,4 +1,4 @@
-Sub CompareWorksheets()
+Sub CompareWorksheetsWithHighlighting()
     Dim ws1 As Worksheet, ws2 As Worksheet, diffSheet As Worksheet
     Dim lastRow1 As Long, lastRow2 As Long, lastCol1 As Long, lastCol2 As Long
     Dim maxRow As Long, maxCol As Long
@@ -51,8 +51,19 @@ Sub CompareWorksheets()
         ' If the row is different, copy it to the Differences sheet
         If isDifferent Then
             For j = 1 To maxCol
-                diffSheet.Cells(diffRow, j).Value = ws1.Cells(i, j).Value ' Sheet1 row
-                diffSheet.Cells(diffRow, maxCol + 2 + j).Value = ws2.Cells(i, j).Value ' Sheet2 row
+                ' Copy data from Sheet1
+                diffSheet.Cells(diffRow, j).Value = ws1.Cells(i, j).Value
+                ' Highlight differences in red
+                If ws1.Cells(i, j).Value <> ws2.Cells(i, j).Value Then
+                    diffSheet.Cells(diffRow, j).Interior.Color = RGB(255, 200, 200) ' Light red
+                End If
+                
+                ' Copy data from Sheet2
+                diffSheet.Cells(diffRow, maxCol + 2 + j).Value = ws2.Cells(i, j).Value
+                ' Highlight differences in blue
+                If ws1.Cells(i, j).Value <> ws2.Cells(i, j).Value Then
+                    diffSheet.Cells(diffRow, maxCol + 2 + j).Interior.Color = RGB(200, 200, 255) ' Light blue
+                End If
             Next j
             diffRow = diffRow + 1
         End If
@@ -60,7 +71,7 @@ Sub CompareWorksheets()
     
     ' Notify the user
     If diffRow > 2 Then
-        MsgBox "Differences found and listed in the 'Differences' sheet.", vbInformation, "Comparison Complete"
+        MsgBox "Differences found and listed in the 'Differences' sheet with highlights.", vbInformation, "Comparison Complete"
     Else
         MsgBox "No differences found between the two sheets.", vbInformation, "Comparison Complete"
     End If
