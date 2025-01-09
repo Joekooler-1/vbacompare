@@ -1,0 +1,52 @@
+Sub UpdateColumnCBasedOnComparison()
+    Dim ws As Worksheet
+    Dim lastRowB As Long, lastRowAM As Long
+    Dim i As Long, j As Long
+    Dim lookupValue As String
+    Dim foundMatch As Boolean
+    Dim changedValues As String
+    Dim changeCount As Long
+    
+    ' Set the worksheet
+    Set ws = ThisWorkbook.Sheets(1) ' Change to the relevant sheet if needed
+    
+    ' Find the last row in columns B and AM
+    lastRowB = ws.Cells(ws.Rows.Count, "B").End(xlUp).Row
+    lastRowAM = ws.Cells(ws.Rows.Count, "AM").End(xlUp).Row
+    
+    ' Initialize the changed values log and counter
+    changedValues = "Values Changed:" & vbNewLine
+    changeCount = 0
+    
+    ' Loop through each value in column B
+    For i = 2 To lastRowB ' Assuming headers in row 1
+        lookupValue = ws.Cells(i, "B").Value
+        foundMatch = False
+        
+        ' Loop through column AM to find a match
+        For j = 2 To lastRowAM
+            If ws.Cells(j, "AM").Value = lookupValue Then
+                ' Match found, update column C with the value from AN
+                ws.Cells(i, "C").Value = ws.Cells(j, "AN").Value
+                foundMatch = True
+                
+                ' Log the change
+                changedValues = changedValues & "Row " & i & ": " & lookupValue & " -> " & ws.Cells(j, "AN").Value & vbNewLine
+                changeCount = changeCount + 1
+                Exit For
+            End If
+        Next j
+        
+        ' Optional: Add a note if no match was found
+        If Not foundMatch Then
+            ws.Cells(i, "C").Value = "No Match Found"
+        End If
+    Next i
+    
+    ' Show the summary of changes
+    If changeCount > 0 Then
+        MsgBox changedValues & vbNewLine & "Total Changes: " & changeCount, vbInformation, "Update Summary"
+    Else
+        MsgBox "No changes were made.", vbInformation, "Update Summary"
+    End If
+End Sub
