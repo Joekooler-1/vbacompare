@@ -67,10 +67,7 @@ Sub UpdateColumnCBasedOnComparison()
             End If
         Next j
         
-        ' Optional: Add a note if no match was found
-        If Not foundMatch Then
-            ws.Cells(i, "C").Value = "No Match Found"
-        End If
+        ' Do not change column C if no match is found
     Next i
     
     ' Add a final note if changes exceed 10
@@ -79,5 +76,9 @@ Sub UpdateColumnCBasedOnComparison()
     End If
     
     ' Show the summary of changes
-    MsgBox popUpLog & vbNewLine & "Total Changes: " & changeCount, vbInformation, "Update Summary"
+    If changeCount > 0 Then
+        MsgBox popUpLog & vbNewLine & "Total Changes: " & changeCount, vbInformation, "Update Summary"
+    Else
+        MsgBox "No changes were made.", vbInformation, "Update Summary"
+    End If
 End Sub
